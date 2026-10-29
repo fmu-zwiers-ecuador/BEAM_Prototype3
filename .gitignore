@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Repository and editor metadata
+.DS_Store
+.vscode/
+
+# BEAM runtime output
+/data/
+/shipping/
+/config/config.json
+/logs/*
+!/logs/.gitkeep
