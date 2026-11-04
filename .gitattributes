@@ -1,0 +1,13 @@
+# Force LF endings for files that run on the Pi or are parsed by tools there.
+# Windows checkouts must not turn these into CRLF.
+*.py    text eol=lf
+*.sh    text eol=lf
+*.service text eol=lf
+*.timer text eol=lf
+*.cfg   text eol=lf
+*.conf  text eol=lf
+*.ini   text eol=lf
+*.json  text eol=lf
+*.toml  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
