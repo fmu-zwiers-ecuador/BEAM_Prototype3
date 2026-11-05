@@ -1,0 +1,85 @@
+import spidev
+import json
+from datetime import datetime
+from zoneinfo import ZoneInfo
+import os
+
+from adafruit_bme280 import basic
+import board, busio
+from digitalio import DigitalInOut
+
+from beamnode.paths import CONFIG_JSON, REPO_ROOT
+
+EASTERN_TZ = ZoneInfo("America/New_York")
+
+# Determine project root dynamically
+project_root = str(REPO_ROOT)
+
+# Load config
+config_path = str(CONFIG_JSON)
+with open(config_path, "r") as f:
+    config = json.load(f)
+
+bme_config = config["bme280"]
+global_config = config["global"]
+
+# Check if sensor is enabled
+if not bme_config.get("enabled", True):
+    exit(0)
+
+node_id = global_config.get("node_id", "unknown-node")
+
+# SPI Pins
+spi_config = bme_config.get("spi", {})
+CS_PIN = getattr(board, spi_config.get("cs_pin", "D5"))
+spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
+cs = DigitalInOut(CS_PIN)
+
+# Initialize BME280
+baudrate = spi_config.get("baudrate", 100000)
+sensor = basic.Adafruit_BME280_SPI(spi, cs, baudrate=baudrate)
+
+# Read values
+temperature = float(sensor.temperature)
+humidity = float(sensor.humidity)
+pressure = float(sensor.pressure)
+
+# Directory and file for logs
+directory = os.path.join(global_config.get("base_dir", os.path.join(project_root, "data")), bme_config.get("directory", "bme280"))
+os.makedirs(directory, exist_ok=True)
+file_name = bme_config.get("file_name", "env_data.json")
+file_path = os.path.join(directory, file_name)
+
+# --- TIME CALCULATIONS ---
+now_local = datetime.now(EASTERN_TZ)
+
+# New record with the separate fields
+env_json_data = {
+    "timestamp_eastern": now_local.isoformat(),
+    "local_time": now_local.strftime("%Y-%m-%d %H:%M:%S"),
+    "timezone": now_local.tzname(),              # The specific zone name
+    "temperature_C": temperature,
+    "humidity_percent": humidity,
+    "pressure_hPa": pressure
+}
+
+# Append to JSON
+try:
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            try:
+                data = json.load(f)
+                if not isinstance(data, dict) or "records" not in data:
+                    data = {"node_id": node_id, "sensor": "bme280", "records": []}
+            except Exception:
+                data = {"node_id": node_id, "sensor": "bme280", "records": []}
+    else:
+        data = {"node_id": node_id, "sensor": "bme280", "records": []}
+
+    data["records"].append(env_json_data)
+
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=4)
+
+except Exception:
+    pass
