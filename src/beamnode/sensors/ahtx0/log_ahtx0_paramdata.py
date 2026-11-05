@@ -6,6 +6,8 @@ from zoneinfo import ZoneInfo
 import os
 import time
 
+from beamnode.paths import CONFIG_JSON
+
 EASTERN_TZ = ZoneInfo("America/New_York")
 
 # --- Hardware Library Imports ---
@@ -18,7 +20,7 @@ except ImportError:
 # -----------------------------
 # Configuration File Path and Loading
 # -----------------------------
-CONFIG_FILE = "/home/pi/BEAMNode_Prototype2/scripts/node/config.json"
+CONFIG_FILE = str(CONFIG_JSON)
 
 def get_config_data():
     """Load configuration from CONFIG_FILE, returning {} on error."""

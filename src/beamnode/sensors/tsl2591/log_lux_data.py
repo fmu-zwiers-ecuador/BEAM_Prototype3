@@ -15,13 +15,15 @@ from zoneinfo import ZoneInfo
 import os
 import time
 
+from beamnode.paths import CONFIG_JSON, REPO_ROOT
+
 EASTERN_TZ = ZoneInfo("America/New_York")
 
 # Determine project root dynamically
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+project_root = str(REPO_ROOT)
 
 # Load config
-config_path = os.path.join(project_root, "config.json")
+config_path = str(CONFIG_JSON)
 with open(config_path, "r") as f:
     config = json.load(f)
 

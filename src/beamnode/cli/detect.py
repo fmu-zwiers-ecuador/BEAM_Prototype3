@@ -22,7 +22,9 @@ import serial
 import serial.tools.list_ports
 from picamera2 import Picamera2
 
-CONFIG_PATH = "/home/pi/BEAMNode_Prototype2/scripts/node/config.json"
+from beamnode.paths import CONFIG_JSON
+
+CONFIG_PATH = str(CONFIG_JSON)
 
 # ---------------- Config Helper ---------------- #
 
