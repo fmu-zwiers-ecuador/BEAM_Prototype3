@@ -76,8 +76,6 @@ def read_rtd_temperature(addr: int) -> float:
     with AtlasI2CDevice(addr, bus=1) as dev:
         status, text, raw = dev.query("R", timeout=1.5, num_bytes=31)
 
-        print(f"DEBUG status={status}, text={repr(text)}, raw={raw}")
-
         if status != 1:
             raise Exception(f"Atlas EZO error code: {status} | Raw: {raw}")
 
