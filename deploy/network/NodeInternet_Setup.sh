@@ -287,8 +287,8 @@ After=network.target
 [Service]
 Type=oneshot
 User=pi
-WorkingDirectory=/home/pi/BEAMNode_Prototype2/scripts/node/node_gateway
-ExecStart=/bin/bash /home/pi/BEAMNode_Prototype2/scripts/node/node_gateway/NodeInternet_Setup.sh
+WorkingDirectory=/home/pi/BEAM_Prototype3/deploy/network
+ExecStart=/bin/bash /home/pi/BEAM_Prototype3/deploy/network/NodeInternet_Setup.sh
 
 [Install]
 WantedBy=multi-user.target

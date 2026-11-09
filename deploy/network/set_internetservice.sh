@@ -1,8 +1,8 @@
 #!/bin/bash
 INTERNET_SERVICE="restart_internet"
 MONITOR_SERVICE="monitor_internet"
-INTERNET_SCRIPT="/home/pi/BEAMNode_Prototype2/restart_internet.sh"
-MONITOR_SCRIPT="/home/pi/BEAMNode_Prototype2/monitor_internet.sh"
+INTERNET_SCRIPT="/home/pi/BEAM_Prototype3/deploy/network/restart_internet.sh"
+MONITOR_SCRIPT="/home/pi/BEAM_Prototype3/deploy/network/monitor_internet.sh"
 
 # Restart internet service
 echo "Setting service for restarting the internet..."
@@ -42,7 +42,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/bash /home/pi/BEAMNode_Prototype2/monitor_internet.sh
+ExecStart=/usr/bin/bash /home/pi/BEAM_Prototype3/deploy/network/monitor_internet.sh
 Restart=always
 RestartSec=5
 

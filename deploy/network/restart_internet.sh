@@ -1,3 +1,3 @@
 #!/bin/bash
-bash /home/pi/BEAMNode_Prototype2/wlan1.sh
-bash /home/pi/BEAMNode_Prototype2/supervisor/SupervisorGateway_Setup.sh
+bash /home/pi/BEAM_Prototype3/deploy/network/wlan1.sh
+bash /home/pi/BEAM_Prototype3/deploy/network/SupervisorGateway_Setup.sh

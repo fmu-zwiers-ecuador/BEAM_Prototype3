@@ -1,3 +1,3 @@
 #!/bin/bash
-rm -rf BEAMNode_Prototype2
-git clone https://github.com/fmu-zwiers-ecuador/BEAMNode_Prototype2.git
+rm -rf BEAM_Prototype3
+git clone --branch main https://github.com/fmu-zwiers-ecuador/BEAM_Prototype3.git

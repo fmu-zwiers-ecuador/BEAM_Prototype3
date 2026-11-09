@@ -16,7 +16,7 @@ while true; do
     ONLINE=false
     log "Ping failed. Restarting internet."
 
-    /home/pi/BEAMNode_Prototype2/restart_internet.sh >> "$LOG_FILE" 2>&1
+    /home/pi/BEAM_Prototype3/deploy/network/restart_internet.sh >> "$LOG_FILE" 2>&1
   else
     if [ "$ONLINE" = false ]; then
       log "Internet connection restored."
