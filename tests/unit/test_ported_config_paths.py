@@ -23,6 +23,7 @@ SCRIPTS = [
     "cli/atlas/calibrate_do.py",
     "cli/atlas/calibrate_ec.py",
     "cli/atlas/calibrate_orp.py",
+    "cli/atlas/calibrate_ph.py",
     "cli/atlas/check_ec_cal.py",
 ]
 
