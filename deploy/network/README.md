@@ -8,7 +8,7 @@ ownership of them. Scripts refer to this directory on a Pi as
 |---|---|
 | `repull.sh` | Deletes and re-clones the repository on `main` |
 | `wlan0.sh`, `wlan1.sh`, `wpa_supplicant-wlan1.conf` | Wi-Fi interfaces |
-| `NodeInternet_Setup.sh` | Node gateway and mesh boot (`nodeinternet.service`) |
+| `NodeInternet_Setup.sh` | Node gateway and mesh boot (`mesh-boot.service`, `mesh-timesync.service`); run once by hand |
 | `SupervisorGateway_Setup.sh` | Supervisor gateway |
 | `set_internetservice.sh` | Installs the internet restart and monitor services |
 | `monitor_internet.sh`, `restart_internet.sh` | Supervisor internet watchdog |

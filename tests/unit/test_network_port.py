@@ -24,7 +24,6 @@ def test_repull_clones_main_explicitly() -> None:
         "monitor_internet.sh",
         "restart_internet.sh",
         "set_internetservice.sh",
-        "NodeInternet_Setup.sh",
     ],
 )
 def test_repository_paths_point_at_deploy_network(script: str) -> None:
@@ -33,6 +32,15 @@ def test_repository_paths_point_at_deploy_network(script: str) -> None:
     found = PI_PATH.findall(text)
     assert found, f"{script} should reference the Pi checkout"
     assert all(path.startswith("deploy/network") for path in found), found
+
+
+def test_node_setup_does_not_install_itself_as_a_service() -> None:
+    text = (NETWORK / "NodeInternet_Setup.sh").read_text(encoding="utf-8")
+
+    exec_lines = re.findall(r"^ExecStart\w*=.*$", text, re.MULTILINE)
+    assert "ExecStart=/usr/local/sbin/mesh-boot.sh" in exec_lines
+    assert not [line for line in exec_lines if "NodeInternet_Setup.sh" in line]
+    assert "User=pi" not in text
 
 
 def test_batman_installer_uses_underscore_name() -> None:
