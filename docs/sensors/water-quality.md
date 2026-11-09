@@ -34,29 +34,33 @@ Each script follows a config-driven approach reading `config/config.json` for bu
 ### **3) Setup**
 
 * **Hardware:** Raspberry Pi (or Pi Zero with InterLink HAT), Atlas EZO ORP/EC/RTD circuits seated on the HAT, Atlas probe(s).
-* **Software:** Python 3.x, `smbus2` (if using smbus variant), or direct `/dev/i2c-*` access via `io` + `fcntl` as implemented in the scripts.
+* **Software:** Python 3.11+, with `smbus2` for the EC tools (`calibrate_ec.py`, `check_ec_cal.py`, `fix_ec_address.py`) and `pyserial` for the `switch_*_to_i2c.py` tools. The loggers and the other wizards use direct `/dev/i2c-*` access via `io` + `fcntl` and need no extra library. Both libraries are listed in the `node` extra in `pyproject.toml`.
+
+The scripts run with `sudo`, so two things must be visible to root's Python rather than only to the `pi` user:
+
+- **The libraries.** Install them with `apt` as shown below. A `pip3 install` as `pi` goes to that user's own site-packages, which `sudo python3` does not read.
+- **The `beamnode` package.** Every logger and calibration tool imports `beamnode.paths` to find `config/config.json`. `sudo` drops `PYTHONPATH` from your shell, so each command sets it with `sudo env PYTHONPATH=/home/pi/BEAM_Prototype3/src`. Without it the script stops with `ModuleNotFoundError: No module named 'beamnode'`.
 
 Install/Run Steps:
 
 ```bash
 # (on the Pi) - ensure I2C enabled in raspi-config
-sudo apt update && sudo apt install -y i2c-tools python3-pip
-pip3 install smbus2
+sudo apt update && sudo apt install -y i2c-tools python3-smbus2 python3-serial
 
 # verify device present (expect 0x62 for ORP by default)
 sudo i2cdetect -y 1
 
 # Run the ORP calibration wizard (interactive)
-sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/calibrate_orp.py
+sudo env PYTHONPATH=/home/pi/BEAM_Prototype3/src python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/calibrate_orp.py
 
 # Run the ORP logger once
-sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/sensors/atlas_sci/log_atlas_orp.py
+sudo env PYTHONPATH=/home/pi/BEAM_Prototype3/src python3 /home/pi/BEAM_Prototype3/src/beamnode/sensors/atlas_sci/log_atlas_orp.py
 
 # Run the EC calibration wizard
-sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/calibrate_ec.py
+sudo env PYTHONPATH=/home/pi/BEAM_Prototype3/src python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/calibrate_ec.py
 
 # Switch ORP from UART to I2C (if required)
-sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/switch_orp_to_i2c.py
+sudo env PYTHONPATH=/home/pi/BEAM_Prototype3/src python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/switch_orp_to_i2c.py
 ```
 
 ### **4) Method**
@@ -79,7 +83,7 @@ sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/switch_orp_to_i2c.p
 **Example: run ORP logger**
 
 ```bash
-sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/sensors/atlas_sci/log_atlas_orp.py
+sudo env PYTHONPATH=/home/pi/BEAM_Prototype3/src python3 /home/pi/BEAM_Prototype3/src/beamnode/sensors/atlas_sci/log_atlas_orp.py
 ```
 
 **Data Structure Example (ORP)**
