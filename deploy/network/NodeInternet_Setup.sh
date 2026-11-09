@@ -121,7 +121,7 @@ for i in $(seq 1 $MAX_RETRIES); do
     # Release any existing lease
     dhclient -r "$MESH_IF" 2>/dev/null || true
     sleep 1
-    
+
     # Request new lease
     if dhclient -v "$MESH_IF" 2>&1 | tee -a /var/log/mesh-boot.log; then
         sleep 2
@@ -132,7 +132,7 @@ for i in $(seq 1 $MAX_RETRIES); do
             break
         fi
     fi
-    
+
     if [ $i -eq $MAX_RETRIES ]; then
         log "ERROR: Failed to get DHCP lease after $MAX_RETRIES attempts"
         exit 1
