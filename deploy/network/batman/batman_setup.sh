@@ -13,7 +13,7 @@ modprobe batman-adv
 ip link set wlan0 down
 iw dev wlan0 set type ibss
 ip link set wlan0 up
-sudo iw dev wlan0 ibss join <network_name> <frequency>  
+sudo iw dev wlan0 ibss join "<network_name>" "<frequency>"  
 # Example: sudo iw dev wlan0 ibss join myadhoc 2412
 
 # Add wlan0 to BATMAN
