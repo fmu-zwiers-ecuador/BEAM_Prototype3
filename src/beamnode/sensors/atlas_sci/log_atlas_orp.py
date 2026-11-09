@@ -9,7 +9,9 @@ import fcntl
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-CONFIG_PATH = "/home/pi/BEAMNode_Prototype2/scripts/node/config.json"
+from beamnode.paths import CONFIG_JSON
+
+CONFIG_PATH = str(CONFIG_JSON)
 EASTERN_TZ = ZoneInfo("America/New_York")
 
 

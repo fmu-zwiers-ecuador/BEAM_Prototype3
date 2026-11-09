@@ -12,7 +12,9 @@ import time
 import smbus2
 from smbus2 import i2c_msg
 
-CONFIG_PATH = "/home/pi/BEAMNode_Prototype2/scripts/node/config.json"
+from beamnode.paths import CONFIG_JSON
+
+CONFIG_PATH = str(CONFIG_JSON)
 
 # i3 InterLink relays I2C to the EZO — add overhead beyond bare-EZO minimums
 INTERLINK_OVERHEAD = 0.4
