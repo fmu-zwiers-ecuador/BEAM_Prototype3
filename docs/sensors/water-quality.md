@@ -7,11 +7,11 @@
 * **Mentor/Reviewer:** Raiz Mohammed
 * **Date Started / Completed:** 03/09/2026 - 03/24/2026
 * **Status:** Done
-* **GitHub Link (examples):**
-  - https://github.com/fmu-zwiers-ecuador/BEAMNode_Prototype2/blob/main/scripts/node/atlas_sci/log_atlas_orp.py
-  - https://github.com/fmu-zwiers-ecuador/BEAMNode_Prototype2/blob/main/scripts/node/atlas_sci/calibrate_orp.py
-  - https://github.com/fmu-zwiers-ecuador/BEAMNode_Prototype2/blob/main/scripts/node/atlas_sci/log_atlas_ec.py
-  - https://github.com/fmu-zwiers-ecuador/BEAMNode_Prototype2/blob/main/scripts/node/atlas_sci/calibrate_ec.py
+* **Scripts (examples):**
+  - [log_atlas_orp.py](../../src/beamnode/sensors/atlas_sci/log_atlas_orp.py)
+  - [calibrate_orp.py](../../src/beamnode/cli/atlas/calibrate_orp.py)
+  - [log_atlas_ec.py](../../src/beamnode/sensors/atlas_sci/log_atlas_ec.py)
+  - [calibrate_ec.py](../../src/beamnode/cli/atlas/calibrate_ec.py)
 
 ---
 
@@ -24,7 +24,7 @@ This document describes the set of helper scripts used to interact with Atlas Sc
 - Interactive calibration wizards for EC and ORP.
 - Utilities to switch Atlas EZO circuits from UART to I2C.
 
-Each script follows a config-driven approach reading `scripts/node/config.json` for bus and address settings so the same code runs across multiple nodes.
+Each script follows a config-driven approach reading `config/config.json` for bus and address settings so the same code runs across multiple nodes.
 
 ### **2) Goals**
 
@@ -47,21 +47,21 @@ pip3 install smbus2
 sudo i2cdetect -y 1
 
 # Run the ORP calibration wizard (interactive)
-sudo python3 /home/pi/BEAMNode_Prototype2/scripts/node/atlas_sci/calibrate_orp.py
+sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/calibrate_orp.py
 
 # Run the ORP logger once
-sudo python3 /home/pi/BEAMNode_Prototype2/scripts/node/atlas_sci/log_atlas_orp.py
+sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/sensors/atlas_sci/log_atlas_orp.py
 
 # Run the EC calibration wizard
-sudo python3 /home/pi/BEAMNode_Prototype2/scripts/node/atlas_sci/calibrate_ec.py
+sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/calibrate_ec.py
 
 # Switch ORP from UART to I2C (if required)
-sudo python3 /home/pi/BEAMNode_Prototype2/scripts/node/atlas_sci/switch_orp_to_i2c.py
+sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/cli/atlas/switch_orp_to_i2c.py
 ```
 
 ### **4) Method**
 
-1. **Config-driven behavior**: All scripts read `scripts/node/config.json` for `atlas_orp`, `atlas_ec`, and `atlas_rtd` sections. This controls `i2c_bus`, `address_hex`, output directory and filenames.
+1. **Config-driven behavior**: All scripts read `config/config.json` for `atlas_orp`, `atlas_ec`, and `atlas_rtd` sections. This controls `i2c_bus`, `address_hex`, output directory and filenames.
 2. **I2C access**: The code provides two patterns depending on script: a raw `/dev/i2c-*` `AtlasI2CDevice` implementation (used by logging and our calibrator) which avoids the overhead of smbus on constrained Pi Zeros, and an `smbus2`-based helper used by EC calibration because of convenient read/write helpers. Both patterns send text commands terminated with CR (0x0D) and parse status + ASCII payload responses per Atlas EZO protocol.
 3. **Calibration flow**: The calibrators follow Atlas-recommended steps: identity check (`I`), query calibration status (`Cal,?`), optional `Cal,clear`, then single-point `Cal,225` (ORP) or EC flows (`Cal,one/low/high`) with generous delays to allow the InterLink HAT to bridge I2C.
 4. **Safe file writes**: Logging scripts use atomic writes (write to temp file then os.replace) to avoid JSON corruption on power loss.
@@ -79,7 +79,7 @@ sudo python3 /home/pi/BEAMNode_Prototype2/scripts/node/atlas_sci/switch_orp_to_i
 **Example: run ORP logger**
 
 ```bash
-sudo python3 /home/pi/BEAMNode_Prototype2/scripts/node/atlas_sci/log_atlas_orp.py
+sudo python3 /home/pi/BEAM_Prototype3/src/beamnode/sensors/atlas_sci/log_atlas_orp.py
 ```
 
 **Data Structure Example (ORP)**
