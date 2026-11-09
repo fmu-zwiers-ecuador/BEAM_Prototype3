@@ -144,6 +144,30 @@ def test_failed_mid_point_stops_the_wizard(wizard, monkeypatch) -> None:
     assert config["atlas_ph"]["enabled"] is False
 
 
+@pytest.mark.parametrize(
+    ("rejected", "answers", "sent"),
+    [
+        ("Cal,low,4.00", ["", "", "", "skip"], ["Cal,mid,7.00", "Cal,low,4.00"]),
+        (
+            "Cal,high,10.00",
+            ["", "", "", ""],
+            ["Cal,mid,7.00", "Cal,low,4.00", "Cal,high,10.00"],
+        ),
+        ("Cal,high,10.00", ["", "", "skip", ""], ["Cal,mid,7.00", "Cal,high,10.00"]),
+    ],
+)
+def test_rejected_optional_point_stops_the_wizard(
+    wizard, monkeypatch, rejected: str, answers: list[str], sent: list[str]
+) -> None:
+    circuit = FakeCircuit(rejected=(rejected,))
+    with pytest.raises(SystemExit):
+        run(wizard, monkeypatch, circuit, answers)
+
+    assert circuit.calibrations == sent
+    config = json.loads(Path(wizard.CONFIG_PATH).read_text())
+    assert config["atlas_ph"]["enabled"] is False
+
+
 def test_point_count_mismatch_does_not_enable(wizard, monkeypatch) -> None:
     circuit = FakeCircuit(reported_points=2)
     with pytest.raises(SystemExit):

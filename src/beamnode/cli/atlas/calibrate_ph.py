@@ -215,15 +215,25 @@ def main():
                 print("- rinse the probe, then place it in pH 4.00 buffer")
                 print("- avoid bubbles and let the reading stabilize")
                 countdown(90)
-                if calibrate_point(dev, "Cal,low,4.00"):
-                    expected_points += 1
+                if not calibrate_point(dev, "Cal,low,4.00"):
+                    print(
+                        "Low-point calibration failed. atlas_ph was not enabled.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                expected_points += 1
 
             if maybe_step("5) High-point calibration in pH 10.00 buffer (optional)"):
                 print("- rinse the probe, then place it in pH 10.00 buffer")
                 print("- avoid bubbles and let the reading stabilize")
                 countdown(90)
-                if calibrate_point(dev, "Cal,high,10.00"):
-                    expected_points += 1
+                if not calibrate_point(dev, "Cal,high,10.00"):
+                    print(
+                        "High-point calibration failed. atlas_ph was not enabled.",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+                expected_points += 1
 
             print("\n6) Verify calibration")
             status, text, raw = run_command(dev, "Cal,?", timeout=0.9)
