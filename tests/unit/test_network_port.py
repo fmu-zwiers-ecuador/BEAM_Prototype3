@@ -60,7 +60,11 @@ def test_node_setup_retires_legacy_nodeinternet_unit() -> None:
     assert re.search(r"grep -Eq '\^ExecStart\.\*NodeInternet_Setup", text)
     assert "systemctl disable --now nodeinternet.service" in text
     assert 'rm -f "$LEGACY_UNIT"' in text
-    # Retirement must happen before the new units are enabled.
-    assert text.index("systemctl disable --now nodeinternet.service") < text.index(
-        "systemctl enable mesh-timesync.service"
-    )
+    # Retirement must happen before the first daemon-reload and before either
+    # replacement unit is enabled.
+    retire = text.index("systemctl disable --now nodeinternet.service")
+    assert retire < text.index("systemctl daemon-reload")
+    assert retire < text.index("systemctl enable mesh-boot.service")
+    assert retire < text.index("systemctl enable mesh-timesync.service")
+    # A failed disable must stop the installer, not be ignored.
+    assert "systemctl disable --now nodeinternet.service || true" not in text
