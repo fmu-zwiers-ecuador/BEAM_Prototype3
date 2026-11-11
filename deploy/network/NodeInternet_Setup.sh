@@ -256,6 +256,21 @@ EOF
 systemctl daemon-reload
 systemctl enable mesh-boot.service
 
+# Older installs (Prototype2) created nodeinternet.service, which re-runs this
+# interactive installer at boot. Retire it, but only if it really is that unit.
+LEGACY_UNIT=/etc/systemd/system/nodeinternet.service
+if [[ -f "$LEGACY_UNIT" ]]; then
+  if grep -Eq '^ExecStart.*NodeInternet_Setup\.sh' "$LEGACY_UNIT"; then
+    echo "Retiring legacy nodeinternet.service..."
+    systemctl disable --now nodeinternet.service || true
+    rm -f "$LEGACY_UNIT"
+    systemctl daemon-reload
+    systemctl reset-failed nodeinternet.service 2>/dev/null || true
+  else
+    echo "WARNING: $LEGACY_UNIT exists but is not the legacy installer unit; leaving it alone."
+  fi
+fi
+
 echo "[7/9] Create delayed time sync service (runs after mesh-boot)..."
 cat >/etc/systemd/system/mesh-timesync.service <<EOF
 [Unit]

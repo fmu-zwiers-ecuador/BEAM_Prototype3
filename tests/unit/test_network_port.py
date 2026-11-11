@@ -50,3 +50,17 @@ def test_batman_installer_uses_underscore_name() -> None:
 
 def test_duplicate_mesh_setup_is_not_ported() -> None:
     assert not list(paths.REPO_ROOT.joinpath("deploy").rglob("mesh_setup"))
+
+
+def test_node_setup_retires_legacy_nodeinternet_unit() -> None:
+    text = (NETWORK / "NodeInternet_Setup.sh").read_text(encoding="utf-8")
+
+    assert "LEGACY_UNIT=/etc/systemd/system/nodeinternet.service" in text
+    # Only retire the unit if it launches the old installer, never an unrelated one.
+    assert re.search(r"grep -Eq '\^ExecStart\.\*NodeInternet_Setup", text)
+    assert "systemctl disable --now nodeinternet.service" in text
+    assert 'rm -f "$LEGACY_UNIT"' in text
+    # Retirement must happen before the new units are enabled.
+    assert text.index("systemctl disable --now nodeinternet.service") < text.index(
+        "systemctl enable mesh-timesync.service"
+    )
