@@ -17,10 +17,10 @@ from zoneinfo import ZoneInfo
 EASTERN_TZ = ZoneInfo("America/New_York")
 
 # --- CONFIGURATION ---
-DETECT_PATH = os.path.join(NODE_DIR, "cli/detect.py")
-SCHEDULER_PATH = os.path.join(NODE_DIR, "scheduling/scheduler.py")
-MOTION_TRIGGER_PATH = os.path.join(NODE_DIR, "motion/beam_motion_trigger.py")
-MOTION_MERGE_WORKER_PATH = os.path.join(NODE_DIR, "motion/motion_merge_worker.py")
+DETECT_PATH = os.path.join(REPO_ROOT, "cli/detect.py")
+SCHEDULER_PATH = os.path.join(REPO_ROOT, "scheduling/scheduler.py")
+MOTION_TRIGGER_PATH = os.path.join(REPO_ROOT, "motion/beam_motion_trigger.py")
+MOTION_MERGE_WORKER_PATH = os.path.join(REPO_ROOT, "motion/motion_merge_worker.py")
 PROJECT_ROOT = "/home/pi/BEAMNode_Prototype3"
 NODE_USB_BACKUP_PERMISSIONS_PATH = os.path.join(
     PROJECT_ROOT,
@@ -43,7 +43,7 @@ DATA_DIR = "/home/pi/data"
 SHIPPING_DIR = "/home/pi/BEAMNode_Prototype3/src/beamnode/storage"
 LOG_PATH = "/home/pi/logs/launcher.log"
 SHIPPING_LOG_PATH = "/home/pi/logs/shipping.log"
-SHIPPING_PATH = os.path.join(NODE_DIR, "shipping_queuing/shipping.py")
+SHIPPING_PATH = os.path.join(REPO_ROOT, "shipping_queuing/shipping.py")
 DETECT_LOG_PATH = "/home/pi/logs/detect_output.log"
 MOTION_LOG_PATH = "/home/pi/logs/motion_output.log"
 MOTION_MERGE_LOG_PATH = "/home/pi/logs/motion_video_processing.log"
