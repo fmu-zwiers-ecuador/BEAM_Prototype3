@@ -9,15 +9,15 @@ import time
 import sys
 import shutil
 import json
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 EASTERN_TZ = ZoneInfo("America/New_York")
 
 # --- CONFIGURATION ---
-NODE_DIR = "/home/pi/BEAMNode_Prototype3/src/beamnode/"
 DETECT_PATH = os.path.join(NODE_DIR, "cli/detect.py")
-CONFIG_PATH = os.path.join(NODE_DIR, "config/config.json")
 SCHEDULER_PATH = os.path.join(NODE_DIR, "scheduling/scheduler.py")
 MOTION_TRIGGER_PATH = os.path.join(NODE_DIR, "motion/beam_motion_trigger.py")
 MOTION_MERGE_WORKER_PATH = os.path.join(NODE_DIR, "motion/motion_merge_worker.py")
