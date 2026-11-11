@@ -15,18 +15,18 @@ from zoneinfo import ZoneInfo
 EASTERN_TZ = ZoneInfo("America/New_York")
 
 # --- CONFIGURATION ---
-NODE_DIR = "/home/pi/BEAMNode_Prototype2/scripts/node"
-DETECT_PATH = os.path.join(NODE_DIR, "sensor_detection/detect.py")
-CONFIG_PATH = os.path.join(NODE_DIR, "config.json")
-SCHEDULER_PATH = os.path.join(NODE_DIR, "scheduler.py")
-MOTION_TRIGGER_PATH = os.path.join(NODE_DIR, "Motion/beam_motion_trigger.py")
-MOTION_MERGE_WORKER_PATH = os.path.join(NODE_DIR, "Motion/motion_merge_worker.py")
-PROJECT_ROOT = "/home/pi/BEAMNode_Prototype2"
+NODE_DIR = "/home/pi/BEAMNode_Prototype3/src/beamnode/"
+DETECT_PATH = os.path.join(NODE_DIR, "cli/detect.py")
+CONFIG_PATH = os.path.join(NODE_DIR, "config/config.json")
+SCHEDULER_PATH = os.path.join(NODE_DIR, "scheduling/scheduler.py")
+MOTION_TRIGGER_PATH = os.path.join(NODE_DIR, "motion/beam_motion_trigger.py")
+MOTION_MERGE_WORKER_PATH = os.path.join(NODE_DIR, "motion/motion_merge_worker.py")
+PROJECT_ROOT = "/home/pi/BEAMNode_Prototype3"
 NODE_USB_BACKUP_PERMISSIONS_PATH = os.path.join(
     PROJECT_ROOT,
     "installation_bash/set_node_usb_backup_permissions.sh",
 )
-POWER_DIR = "/home/pi/BEAMNode_Prototype2/scripts/power"
+POWER_DIR = "/home/pi/BEAMNode_Prototype3/src/beamnode/power"
 LOW_POWER_BACKENDS = {
     "mppt": {
         "config_key": "low_power_mode",
@@ -35,12 +35,12 @@ LOW_POWER_BACKENDS = {
     },
     "pvpi": {
         "config_key": "lpm_pvpi",
-        "path": os.path.join(POWER_DIR, "Lpm_pvpi.py"),
+        "path": os.path.join(POWER_DIR, "lpm_pvpi.py"),
         "log_path": "/home/pi/logs/lpm_pvpi_output.log",
     },
 }
 DATA_DIR = "/home/pi/data"
-SHIPPING_DIR = "/home/pi/shipping"
+SHIPPING_DIR = "/home/pi//BEAMNode_Prototype3/src/beamnode/storage"
 LOG_PATH = "/home/pi/logs/launcher.log"
 SHIPPING_LOG_PATH = "/home/pi/logs/shipping.log"
 SHIPPING_PATH = os.path.join(NODE_DIR, "shipping_queuing/shipping.py")
