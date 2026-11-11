@@ -58,7 +58,7 @@ config = {}
 
 def load_config_from_disk():
     """Read the current config.json."""
-    with open(CONFIG_PATH, "r") as f:
+    with open(CONFIG_JSON, "r") as f:
         return json.load(f)
 
 
@@ -163,7 +163,7 @@ def low_power_active():
 def selected_low_power_backend():
     """Return the configured low-power backend, or None when disabled/invalid."""
     try:
-        with open(CONFIG_PATH, "r") as f:
+        with open(CONFIG_JSON, "r") as f:
             current_config = json.load(f)
     except Exception as e:
         log(f"ERROR: Could not read low-power config: {e}")
@@ -403,12 +403,12 @@ if __name__ == "__main__":
         log(f"ERROR: File not found at {DETECT_PATH}")
 
     # --- Load config once, after detect.py has finished ---
-    log(f"Loading config from {CONFIG_PATH} (post-detect)...")
+    log(f"Loading config from {CONFIG_JSON} (post-detect)...")
     try:
         config = load_config_from_disk()
         log("Config loaded successfully.")
     except Exception as e:
-        log(f"CRITICAL ERROR: Could not read {CONFIG_PATH} after detect.py: {e}")
+        log(f"CRITICAL ERROR: Could not read {CONFIG_JSON} after detect.py: {e}")
         sys.exit(1)
     
     log("Current configuration:")
