@@ -15,6 +15,16 @@ SCRIPTS = [
     "sensors/bme680/log_env680_data.py",
     "sensors/tsl2591/log_lux_data.py",
     "sensors/ultrasonic/log_ultrasonic.py",
+    "sensors/atlas_sci/log_atlas_do.py",
+    "sensors/atlas_sci/log_atlas_ec.py",
+    "sensors/atlas_sci/log_atlas_orp.py",
+    "sensors/atlas_sci/log_atlas_ph.py",
+    "sensors/atlas_sci/log_atlas_rtd.py",
+    "cli/atlas/calibrate_do.py",
+    "cli/atlas/calibrate_ec.py",
+    "cli/atlas/calibrate_orp.py",
+    "cli/atlas/calibrate_ph.py",
+    "cli/atlas/check_ec_cal.py",
 ]
 
 
