@@ -17,14 +17,14 @@ from zoneinfo import ZoneInfo
 EASTERN_TZ = ZoneInfo("America/New_York")
 
 # --- CONFIGURATION ---
-DETECT_PATH = os.path.join(REPO_ROOT, "cli/detect.py")
+DETECT_PATH = os.path.join(REPO_ROOT, "/src/beamnode/cli/detect.py")
 SCHEDULER_PATH = os.path.join(REPO_ROOT, "scheduling/scheduler.py")
 MOTION_TRIGGER_PATH = os.path.join(REPO_ROOT, "motion/beam_motion_trigger.py")
 MOTION_MERGE_WORKER_PATH = os.path.join(REPO_ROOT, "motion/motion_merge_worker.py")
 PROJECT_ROOT = "/home/pi/BEAMNode_Prototype3"
 NODE_USB_BACKUP_PERMISSIONS_PATH = os.path.join(
     PROJECT_ROOT,
-    "installation_bash/set_node_usb_backup_permissions.sh",
+    REPO_ROOT, "deploy/setup/set_node_usb_backup_permissions.sh",
 )
 POWER_DIR = "/home/pi/BEAMNode_Prototype3/src/beamnode/power"
 LOW_POWER_BACKENDS = {
@@ -40,7 +40,7 @@ LOW_POWER_BACKENDS = {
     },
 }
 DATA_DIR = "/home/pi/data"
-SHIPPING_DIR = "/home/pi/BEAMNode_Prototype3/src/beamnode/storage"
+SHIPPING_DIR = "src/beamnode/storage/shipping.py"
 LOG_PATH = "/home/pi/logs/launcher.log"
 SHIPPING_LOG_PATH = "/home/pi/logs/shipping.log"
 SHIPPING_PATH = os.path.join(REPO_ROOT, "shipping_queuing/shipping.py")
