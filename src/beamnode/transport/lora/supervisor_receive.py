@@ -6,23 +6,12 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 EASTERN_TZ = ZoneInfo("America/New_York")
-import board, busio, digitalio
-import adafruit_rfm9x
 
 # --- Logging (redirect all output) ---
 LOG_PATH = "/home/pi/logs/lora_listen.log"
 
-# --- LoRa setup ---
-spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
-cs = digitalio.DigitalInOut(board.CE1)
-reset = digitalio.DigitalInOut(board.D25)
-
-rfm9x = adafruit_rfm9x.RFM9x(spi, cs, reset, 915.0)
-rfm9x.tx_power = 23
-try:
-    rfm9x.listen()
-except AttributeError:
-    pass
+# Initialized by main so packet handlers can be tested without Pi hardware.
+rfm9x = None
 
 # --- STORAGE ---
 files = {}
@@ -36,6 +25,24 @@ OUTPUT_DIR = "/home/pi/data"
 
 # Per-node session output directories
 NODE_OUTPUT_DIRS = {}
+
+
+def create_radio():
+    import adafruit_rfm9x
+    import board
+    import busio
+    import digitalio
+
+    spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
+    cs = digitalio.DigitalInOut(board.CE1)
+    reset = digitalio.DigitalInOut(board.D25)
+    radio = adafruit_rfm9x.RFM9x(spi, cs, reset, 915.0)
+    radio.tx_power = 23
+    try:
+        radio.listen()
+    except AttributeError:
+        pass
+    return radio
 
 def log(msg):
     """Internal logging."""
@@ -191,31 +198,39 @@ def handle_end(pkt):
 
     del files[key]
 
-# --- MAIN LOOP ---
-log("Supervisor listening...")
+def main():
+    global rfm9x
+    if rfm9x is None:
+        rfm9x = create_radio()
 
-while True:
-    try:
-        pkt = rfm9x.receive(timeout=0.5, keep_listening=True)
-    except TypeError:
-        pkt = rfm9x.receive(timeout=0.5)
-    if not pkt:
-        continue
+    log("Supervisor listening...")
 
-    try:
-        msg = json.loads(pkt.decode())
-        log(f"DEBUG: Parsed message type: {msg.get('type')}")
-    except Exception as e:
-        log(f"DEBUG: Failed to decode packet: {e}")
-        continue
+    while True:
+        try:
+            pkt = rfm9x.receive(timeout=0.5, keep_listening=True)
+        except TypeError:
+            pkt = rfm9x.receive(timeout=0.5)
+        if not pkt:
+            continue
 
-    if msg["type"] == "DATA":
-        handle_data(msg)
-    
-    if msg["type"] == "TIME_REQUEST":
-        node_id = msg.get("node_id", "unknown-node")
-        log(f"Received TIME_REQUEST from {node_id}")
-        send_time()
+        try:
+            msg = json.loads(pkt.decode())
+            log(f"DEBUG: Parsed message type: {msg.get('type')}")
+        except Exception as e:
+            log(f"DEBUG: Failed to decode packet: {e}")
+            continue
 
-    elif msg["type"] == "END":
-        handle_end(msg)
+        if msg["type"] == "DATA":
+            handle_data(msg)
+
+        if msg["type"] == "TIME_REQUEST":
+            node_id = msg.get("node_id", "unknown-node")
+            log(f"Received TIME_REQUEST from {node_id}")
+            send_time()
+
+        elif msg["type"] == "END":
+            handle_end(msg)
+
+
+if __name__ == "__main__":
+    main()

@@ -4,25 +4,33 @@ import sys
 import atexit
 import subprocess
 import time
-import board, busio, digitalio
 import json
-import adafruit_rfm9x
 
 from beamnode.paths import CONFIG_JSON
 
 # --- Logging (redirect all output) ---
 LOG_PATH = "/home/pi/logs/time_request.log"
-os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
-_log_file = open(LOG_PATH, "a", buffering=1)
-sys.stdout = _log_file
-sys.stderr = _log_file
-atexit.register(_log_file.close)
 
-SPI = busio.SPI(board.SCK, board.MOSI, board.MISO)
-CS = digitalio.DigitalInOut(board.CE1)
-RESET = digitalio.DigitalInOut(board.D25)
 
-rfm9x = adafruit_rfm9x.RFM9x(SPI, CS, RESET, 915.0)
+def configure_logging():
+    os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+    log_file = open(LOG_PATH, "a", buffering=1)
+    sys.stdout = log_file
+    sys.stderr = log_file
+    atexit.register(log_file.close)
+
+
+def create_radio():
+    import adafruit_rfm9x
+    import board
+    import busio
+    import digitalio
+
+    spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
+    cs = digitalio.DigitalInOut(board.CE1)
+    reset = digitalio.DigitalInOut(board.D25)
+    return adafruit_rfm9x.RFM9x(spi, cs, reset, 915.0)
+
 # send a time request to the supervisor and wait for a response
 def request_time(rfm9x, node_id, timeout=300):
     # Create a time request message
@@ -49,9 +57,9 @@ def request_time(rfm9x, node_id, timeout=300):
     print("Timeout waiting for time response from supervisor.")
     return None
 
-if __name__ == "__main__":
-    # Initialize LoRa radio (assuming rfm9x is already set up)
-    rfm9x = adafruit_rfm9x.RFM9x(SPI, CS, RESET, 915.0)
+def main():
+    configure_logging()
+    rfm9x = create_radio()
 
     # Load node ID from config
     time.sleep(3)
@@ -68,3 +76,7 @@ if __name__ == "__main__":
             print(f"System time set to: {timestamp}")
         except subprocess.CalledProcessError as e:
             print(f"Failed to set system time: {e}")
+
+
+if __name__ == "__main__":
+    main()

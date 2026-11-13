@@ -8,8 +8,6 @@ import re
 from pathlib import Path
 import socket
 import atexit
-import board, busio, digitalio
-import adafruit_rfm9x
 from zoneinfo import ZoneInfo
 
 EASTERN_TZ = ZoneInfo("America/New_York")
@@ -17,13 +15,8 @@ EASTERN_TZ = ZoneInfo("America/New_York")
 # --- Logging (redirect all output) ---
 LOG_PATH = "/home/pi/logs/lora_send.log"
 
-# --- LoRa setup ---
-spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
-cs = digitalio.DigitalInOut(board.CE1)
-reset = digitalio.DigitalInOut(board.D25)
-
-rfm9x = adafruit_rfm9x.RFM9x(spi, cs, reset, 915.0)
-rfm9x.tx_power = 23
+# Initialized by main so protocol helpers can be tested without Pi hardware.
+rfm9x = None
 
 # --- CONFIG ---
 NODE_ID = socket.gethostname()
@@ -47,6 +40,19 @@ RETRY_BACKOFF_MAX = 4.0
 INTER_CHUNK_JITTER_MAX = 0.35
 
 # --- Helpers ---
+
+def create_radio():
+    import adafruit_rfm9x
+    import board
+    import busio
+    import digitalio
+
+    spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
+    cs = digitalio.DigitalInOut(board.CE1)
+    reset = digitalio.DigitalInOut(board.D25)
+    radio = adafruit_rfm9x.RFM9x(spi, cs, reset, 915.0)
+    radio.tx_power = 23
+    return radio
 
 def log(msg):
     """Internal logging."""
@@ -274,6 +280,10 @@ def iter_json_files(root_dir, recursive=True):
     return [str(p) for p in candidates]
 
 def main():
+    global rfm9x
+    if rfm9x is None:
+        rfm9x = create_radio()
+
     parser = argparse.ArgumentParser(description="Send all JSON files over LoRa")
     parser.add_argument(
         "--dir",
