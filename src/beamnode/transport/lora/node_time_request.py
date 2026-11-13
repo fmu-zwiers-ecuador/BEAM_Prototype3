@@ -8,6 +8,8 @@ import board, busio, digitalio
 import json
 import adafruit_rfm9x
 
+from beamnode.paths import CONFIG_JSON
+
 # --- Logging (redirect all output) ---
 LOG_PATH = "/home/pi/logs/time_request.log"
 os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
@@ -52,9 +54,8 @@ if __name__ == "__main__":
     rfm9x = adafruit_rfm9x.RFM9x(SPI, CS, RESET, 915.0)
 
     # Load node ID from config
-    config_path = "/home/pi/BEAMNode_Prototype2/scripts/node/config.json"
     time.sleep(3)
-    with open(config_path, "r") as f:
+    with CONFIG_JSON.open("r", encoding="utf-8") as f:
         config = json.load(f)
     node_id = config["global"].get("node_id", "unknown-node")
 

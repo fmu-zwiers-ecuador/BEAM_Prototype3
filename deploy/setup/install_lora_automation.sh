@@ -32,11 +32,12 @@ if [[ "$ROLE" != "node" && "$ROLE" != "supervisor" ]]; then
   exit 1
 fi
 
-PROJECT_ROOT="/home/pi/BEAMNode_Prototype2"
-LORA_DIR="$PROJECT_ROOT/scripts/lora"
+PROJECT_ROOT="/home/pi/BEAM_Prototype3"
+LORA_DIR="$PROJECT_ROOT/src/beamnode/transport/lora"
+UNIT_DIR="$PROJECT_ROOT/deploy/systemd"
 SYSTEMD_DIR="/etc/systemd/system"
 LOG_DIR="/home/pi/logs"
-CONFIG_PATH="$PROJECT_ROOT/scripts/node/config.json"
+CONFIG_PATH="$PROJECT_ROOT/config/config.json"
 
 read_lora_config() {
   /usr/bin/python3 - "$CONFIG_PATH" <<'PY'
@@ -135,7 +136,7 @@ mkdir -p "$LOG_DIR"
 SUDOERS_DATE_FILE="/etc/sudoers.d/beamnode-date"
 cat > "$SUDOERS_DATE_FILE" <<'EOF'
 pi ALL=(ALL) NOPASSWD: /bin/date
-pi ALL=(ALL) NOPASSWD: /usr/bin/python3 /home/pi/BEAMNode_Prototype2/scripts/lora/node_time_request.py
+pi ALL=(ALL) NOPASSWD: /usr/bin/python3 /home/pi/BEAM_Prototype3/src/beamnode/transport/lora/node_time_request.py
 EOF
 chmod 440 "$SUDOERS_DATE_FILE"
 visudo -cf "$SUDOERS_DATE_FILE" >/dev/null 2>&1 || true
@@ -154,7 +155,7 @@ if [[ "$ROLE" == "node" ]]; then
   rm -rf "$SYSTEMD_DIR/lora-supervisor-receive.service.d"
   systemctl daemon-reload
   echo "[1/5] Installing node sender service + timer..."
-  cp "$LORA_DIR/lora-node-send.service" "$SYSTEMD_DIR/"
+  cp "$UNIT_DIR/lora-node-send.service" "$SYSTEMD_DIR/"
   cat >"$SYSTEMD_DIR/lora-node-send.timer" <<EOF
 [Unit]
 Description=Run LoRa Node Sender daily at $LORA_SEND_TIME
@@ -196,7 +197,7 @@ if [[ "$ROLE" == "supervisor" ]]; then
   rm -f "$SYSTEMD_DIR/lora-node-send.timer"
   systemctl daemon-reload
   echo "[1/6] Installing supervisor receiver service (24/7 on boot)..."
-  cp "$LORA_DIR/lora-supervisor-receive.service" "$SYSTEMD_DIR/"
+  cp "$UNIT_DIR/lora-supervisor-receive.service" "$SYSTEMD_DIR/"
 
   mkdir -p "$SYSTEMD_DIR/lora-supervisor-receive.service.d"
   cat >"$SYSTEMD_DIR/lora-supervisor-receive.service.d/schedule.conf" <<EOF
