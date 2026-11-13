@@ -1,10 +1,15 @@
 ## Script to request time from supervisor and set system time accordingly
-import os 
+import os
 import sys
 import atexit
 import subprocess
 import time
 import json
+from pathlib import Path
+
+SRC_ROOT = Path(__file__).resolve().parents[3]
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from beamnode.paths import CONFIG_JSON
 

@@ -136,10 +136,13 @@ mkdir -p "$LOG_DIR"
 SUDOERS_DATE_FILE="/etc/sudoers.d/beamnode-date"
 cat > "$SUDOERS_DATE_FILE" <<'EOF'
 pi ALL=(ALL) NOPASSWD: /bin/date
-pi ALL=(ALL) NOPASSWD: /usr/bin/python3 /home/pi/BEAM_Prototype3/src/beamnode/transport/lora/node_time_request.py
 EOF
 chmod 440 "$SUDOERS_DATE_FILE"
-visudo -cf "$SUDOERS_DATE_FILE" >/dev/null 2>&1 || true
+if ! visudo -cf "$SUDOERS_DATE_FILE" >/dev/null 2>&1; then
+  echo "ERROR: Invalid sudoers file: $SUDOERS_DATE_FILE" >&2
+  rm -f "$SUDOERS_DATE_FILE"
+  exit 1
+fi
 
 
 

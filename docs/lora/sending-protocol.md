@@ -104,7 +104,9 @@ that behavior.
 The supervisor waits four seconds before responding so the node can switch to
 receive mode. The node waits up to 300 seconds and applies the response with
 `sudo date -s`. The installer writes the required date command to
-`/etc/sudoers.d/beamnode-date`.
+`/etc/sudoers.d/beamnode-date`; the Python script itself never runs as root.
+When executed by absolute path, the script adds the checkout's `src` directory
+to its import path before loading `beamnode.paths`.
 
 ## Retry and collision behavior
 
@@ -200,6 +202,8 @@ python -m pytest -q tests/unit/test_lora_paths.py tests/unit/test_lora_protocol.
   never finalized. Tracked in #22.
 - The sender recursively selects every JSON file under its configured root and
   can remove files owned by other workflows. Tracked in #23.
+- The receiver does not yet validate radio-supplied run and file identifiers
+  before building output paths. Tracked in #25.
 - Transfers exist only in supervisor memory until they are finalized; a
   receiver restart discards partial transfer state.
 

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import ast
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -47,6 +49,24 @@ def test_time_request_uses_shared_config_path() -> None:
     assert "scripts/node/config.json" not in source
 
 
+def test_time_request_resolves_beamnode_in_isolated_python() -> None:
+    script = LORA / "node_time_request.py"
+    probe = (
+        "import runpy, sys; "
+        "namespace = runpy.run_path(sys.argv[1]); "
+        "assert namespace['CONFIG_JSON'].name == 'config.json'"
+    )
+
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", probe, str(script)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize(
     ("unit_name", "script_name"),
     [
@@ -83,10 +103,11 @@ def test_lora_installer_uses_split_prototype3_directories() -> None:
     assert 'CONFIG_PATH="$PROJECT_ROOT/config/config.json"' in text
     assert 'cp "$UNIT_DIR/lora-node-send.service" "$SYSTEMD_DIR/"' in text
     assert 'cp "$UNIT_DIR/lora-supervisor-receive.service" "$SYSTEMD_DIR/"' in text
-    assert (
-        "/usr/bin/python3 "
-        "/home/pi/BEAM_Prototype3/src/beamnode/transport/lora/node_time_request.py"
-    ) in text
+    assert "pi ALL=(ALL) NOPASSWD: /bin/date" in text
+    assert "NOPASSWD: /usr/bin/python3" not in text
+    assert 'if ! visudo -cf "$SUDOERS_DATE_FILE"' in text
+    assert 'rm -f "$SUDOERS_DATE_FILE"' in text
+    assert "visudo -cf \"$SUDOERS_DATE_FILE\" >/dev/null 2>&1 || true" not in text
     assert "BEAMNode_Prototype2" not in text
 
 
