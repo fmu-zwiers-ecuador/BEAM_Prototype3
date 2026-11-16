@@ -5,6 +5,8 @@ from zoneinfo import ZoneInfo
 import time
 import os
 import re
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 
 EASTERN_TZ = ZoneInfo("America/New_York")
 

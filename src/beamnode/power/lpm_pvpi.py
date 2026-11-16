@@ -17,7 +17,8 @@ import json
 import logging
 import serial
 import time
-
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path

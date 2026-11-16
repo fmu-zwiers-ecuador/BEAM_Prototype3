@@ -13,11 +13,13 @@ import time
 import logging
 import os
 import sys
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 from datetime import datetime, timezone
 
 # ─── Configuration ────────────────────────────────────────────────────────────
 
-CONFIG_PATH = "/home/pi/BEAMNode_Prototype2/scripts/node/config.json"
+
 
 # Constants are set in main() after load_config is defined
 SERIAL_PORT = BAUD_RATE = SERIAL_TIMEOUT = None

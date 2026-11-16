@@ -5,6 +5,8 @@ import json
 import os
 import sys
 import time
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 from datetime import datetime
 from zoneinfo import ZoneInfo
 

@@ -16,6 +16,8 @@ import pyaudio
 import fcntl
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 import ctypes
 from ctypes.util import find_library
 
