@@ -30,9 +30,7 @@ from typing import List, Optional
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Sensor config JSON (also contains the lpm_pvpi section)
-SENSOR_CONFIG_PATH = Path(
-    "/home/pi/BEAMNode_Prototype2/scripts/node/config.json"
-)
+
 
 # Base directory for event log output
 LOG_DIR = Path("/home/pi/logs")
