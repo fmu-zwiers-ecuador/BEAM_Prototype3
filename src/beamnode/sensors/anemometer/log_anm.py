@@ -17,7 +17,7 @@ ser = serial.Serial('/dev/ttyUSB1', 9600, timeout=1)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 # Load config
-config_path = os.path.join(project_root, "config.json")
+config_path = CONFIG_JSON
 with open(config_path, "r") as f:
     config = json.load(f)
 

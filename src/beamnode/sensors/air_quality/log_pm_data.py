@@ -20,7 +20,7 @@ except Exception:
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 NODE_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
-DEFAULT_CONFIG_FILE = os.path.join(NODE_DIR, "config.json")
+DEFAULT_CONFIG_FILE = CONFIG_JSON
 CONFIG_FILE = os.environ.get("BEAM_CONFIG_PATH", DEFAULT_CONFIG_FILE)
 
 

@@ -27,6 +27,10 @@ from typing import List, Optional
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Configuration
+
+CONFIG_PATH = CONFIG_JSON
+SENSOR_CONFIG_PATH = CONFIG_JSON
+
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Sensor config JSON (also contains the lpm_pvpi section)
