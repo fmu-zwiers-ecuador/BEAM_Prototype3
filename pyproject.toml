@@ -11,7 +11,7 @@ requires-python = ">=3.11"
 dependencies = []
 
 [project.optional-dependencies]
-node = [serial, smbus2, pyaudio]
+node = ["serial", "smbus2", "pyaudio"]
 supervisor = []
 dev = [
   "pytest>=8",
