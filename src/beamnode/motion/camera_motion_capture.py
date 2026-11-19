@@ -17,7 +17,8 @@ import json
 import subprocess
 import time
 from pathlib import Path
-
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 from gpiozero import Device, OutputDevice
 from motion_logging import setup_motion_logger
 from picamera2 import Picamera2
@@ -36,7 +37,7 @@ except Exception:
 MOTION_DIR  = Path(__file__).resolve().parent
 NODE_DIR    = MOTION_DIR.parent
 BASE_DIR    = NODE_DIR.parent.parent
-CONFIG_PATH = NODE_DIR / "config.json"
+CONFIG_PATH = CONFIG_JSON
 DEFAULT_FLASH_GPIO = 26
 
 logger = setup_motion_logger("camera_motion_capture")

@@ -6,7 +6,7 @@ import logging.handlers
 from pathlib import Path
 
 
-LOG_DIR = Path("/home/pi/BEAMNode_Prototype2/logs")
+LOG_DIR = Path("/home/pi/BEAMNode_Prototype3/logs")
 LOG_PATH = LOG_DIR / "motion.log"
 
 

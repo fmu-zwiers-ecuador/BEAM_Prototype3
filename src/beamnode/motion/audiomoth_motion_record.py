@@ -15,14 +15,15 @@ import re
 import subprocess
 import time
 from pathlib import Path
-
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 from motion_logging import setup_motion_logger
 
 
 MOTION_DIR  = Path(__file__).resolve().parent
 NODE_DIR    = MOTION_DIR.parent
 BASE_DIR    = NODE_DIR.parent.parent
-CONFIG_PATH = NODE_DIR / "config.json"
+CONFIG_PATH = CONFIG_JSON
 
 logger = setup_motion_logger("audiomoth_motion_record")
 

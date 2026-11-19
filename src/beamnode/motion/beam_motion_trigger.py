@@ -28,6 +28,8 @@ import time
 from datetime import datetime
 from pathlib import Path
 from gpiozero import Device, MotionSensor
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 
 try:
     from gpiozero.pins.rpigpio import RPiGPIOFactory
@@ -43,7 +45,7 @@ from motion_logging import setup_motion_logger
 MOTION_DIR   = Path(__file__).resolve().parent
 NODE_DIR     = MOTION_DIR.parent
 BASE_DIR     = NODE_DIR.parent.parent
-CONFIG_PATH  = NODE_DIR / "config.json"
+CONFIG_PATH  = CONFIG_JSON
 LUX_LOG_PATH = Path("/home/pi/data/tsl2591/lux_data.json")
 
 DEFAULT_DATA_DIR = Path("/home/pi/data")
