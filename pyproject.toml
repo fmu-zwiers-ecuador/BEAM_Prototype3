@@ -16,7 +16,8 @@ node = [
   "smbus2>=0.4",
   "serial", 
   "smbus2", 
-  "pyaudio"]
+  "pyaudio"
+]
 supervisor = []
 dev = [
   "pytest>=8",
