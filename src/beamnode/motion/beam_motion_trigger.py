@@ -46,10 +46,10 @@ MOTION_DIR   = Path(__file__).resolve().parent
 NODE_DIR     = MOTION_DIR.parent
 BASE_DIR     = NODE_DIR.parent.parent
 CONFIG_PATH  = CONFIG_JSON
-LUX_LOG_PATH = Path("/home/pi/data/tsl2591/lux_data.json")
+LUX_LOG_PATH = Path(REPO_ROOT, "/data/tsl2591/lux_data.json")
 
-DEFAULT_DATA_DIR = Path("/home/pi/data")
-LOG_DIR = Path("/home/pi/logs")
+DEFAULT_DATA_DIR = Path(REPO_ROOT, "/data")
+LOG_DIR = Path(REPO_ROOT, "/logs")
 VIDEO_PROCESSING_LOG_PATH = LOG_DIR / "motion_video_processing.log"
 AUDIO_LOCK_PATH = Path("/tmp/beam_audiomoth.lock")
 

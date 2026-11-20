@@ -17,12 +17,14 @@ import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 
 
-LOG_DIR = Path("/home/pi/logs")
+LOG_DIR = Path(REPO_ROOT, "logs")
 LOCK_PATH = LOG_DIR / "motion_merge.lock"
 VIDEO_PROCESSING_LOG_PATH = LOG_DIR / "motion_video_processing.log"
-DEFAULT_QUEUE_DIR = Path("/home/pi/data/motion_events")
+DEFAULT_QUEUE_DIR = Path(REPO_ROOT, "data/motion_events")
 
 
 def append_merge_log(log_path, message):

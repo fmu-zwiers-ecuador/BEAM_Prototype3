@@ -4,9 +4,11 @@
 import logging
 import logging.handlers
 from pathlib import Path
+from beamnode.paths import REPO_ROOT
+from beamnode.paths import CONFIG_JSON
 
 
-LOG_DIR = Path("/home/pi/BEAMNode_Prototype3/logs")
+LOG_DIR = Path(REPO_ROOT, "/logs")
 LOG_PATH = LOG_DIR / "motion.log"
 
 
