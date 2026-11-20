@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 
 # ─── Configuration ────────────────────────────────────────────────────────────
 
-
+CONFIG_PATH = CONFIG_JSON
 
 # Constants are set in main() after load_config is defined
 SERIAL_PORT = BAUD_RATE = SERIAL_TIMEOUT = None
