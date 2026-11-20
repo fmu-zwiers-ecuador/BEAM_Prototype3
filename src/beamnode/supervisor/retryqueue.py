@@ -20,7 +20,7 @@ from zoneinfo import ZoneInfo
 from dotenv import load_dotenv, dotenv_values
 load_dotenv()
 
-from beamnode.paths import CONFIG_JSON, NODE_STATES_DIR
+from beamnode.paths import MOVE_TO_BEAMDRIVE_SCRIPT, NODE_STATES_JSON
 
 EASTERN_TZ = ZoneInfo("America/New_York")
 
@@ -32,16 +32,16 @@ CONFIG_FILE = str(CONFIG_JSON)
 # ---------------------------------------------------
 # CONFIGURATION
 # ---------------------------------------------------
-JSON_FILEPATH = "/home/pi/BEAM_Prototype3/src/beamnode/supervisor/node_states.json"
+JSON_FILEPATH = str(NODE_STATES_JSON)
 JSON_BACKUP_FILEPATH = JSON_FILEPATH + ".bak"
 SUPERVISOR_DATA_ROOT = "/home/pi/usbmnt/data"
 SUPERVISOR_USB_DEVICE = "/dev/sda1"
 SUPERVISOR_USB_MOUNT = "/home/pi/usbmnt"
 REMOTE_SHIP_DIR = "/home/pi/shipping"
 LOG_FILE = "/home/pi/logs/queue.log"
-NAS_PATH = os.getenv("NAS_PATH") + ":/BEAM_test_data/FEC/"
+NAS_REMOTE_SUBDIR = ":/BEAM_test_data/FEC/"
 NAS_SSH_CMD = "ssh -p 2222"
-MOVE_TO_DRIVE_SCRIPT = "/home/pi/BEAM_Prototype3/src/beamnode/supervisor/move_supervisor_data_to_beamdrive.sh"
+MOVE_TO_DRIVE_SCRIPT = str(MOVE_TO_BEAMDRIVE_SCRIPT)
 RUN_USER = "pi"
 NODE_USB_DEVICE = "/dev/sda1"
 NODE_USB_FALLBACK_MOUNT = "/home/pi/usbmnt"
@@ -535,25 +535,31 @@ def delete_shipping_data(full_hostname):
     except Exception as e:
         log(f"{full_hostname}: Deleting shipping folder: WARNING - Unexpected error ({type(e).__name__}): {e}")
         return False
+
+def get_nas_path():
+    """Return the NAS destination, or None (after logging) if NAS_PATH is unset."""
+    base = os.getenv("NAS_PATH", "").strip()
+    if not base:
+        log("ERROR: NAS_PATH is not set (check your .env or environment). Cannot back up to NAS.")
+        return None
+    return base + NAS_REMOTE_SUBDIR
     
 def move_to_nas():
     """
     Pushes data from supervisor root to Synology NAS using scp.
     """
     log("=== STARTING NAS BACKUP ===")
-    
-    # Check if there is data to send before running scp
+
     if not os.path.exists(SUPERVISOR_DATA_ROOT) or not os.listdir(SUPERVISOR_DATA_ROOT):
         log("No local data found in supervisor root directory. Skipping NAS backup.")
         return True
 
-    # The "/." suffix copies the contents of data, not a nested data folder.
+    nas_path = get_nas_path()
+    if nas_path is None:
+        return False
+
     source_dir = os.path.join(SUPERVISOR_DATA_ROOT, ".")
-    cmd = [
-        "scp", "-r", 
-        source_dir,
-        NAS_PATH
-    ]
+    cmd = ["scp", "-r", source_dir, nas_path]
     
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)

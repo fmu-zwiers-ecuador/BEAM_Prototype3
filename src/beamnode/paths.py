@@ -20,8 +20,11 @@ PACKAGE_ROOT = Path(__file__).resolve().parent
 
 CONFIG_DIR = REPO_ROOT / "config"
 CONFIG_JSON = CONFIG_DIR / "config.json"
+NODE_STATES_JSON = CONFIG_DIR / "node_states.json"
 LOGS_DIR = REPO_ROOT / "logs"
 SENSORS_DIR = PACKAGE_ROOT / "sensors"
+SUPERVISOR_DIR = PACKAGE_ROOT / "supervisor"
+MOVE_TO_BEAMDRIVE_SCRIPT = SUPERVISOR_DIR / "move_supervisor_data_to_beamdrive.sh"
 
 #: Config sections with this prefix share one script folder.
 ATLAS_PREFIX = "atlas_"
