@@ -130,7 +130,26 @@ to_calendar_time() {
 NODE_ONCALENDAR="*-*-* $(to_calendar_time "$LORA_SEND_TIME")"
 SUPERVISOR_ONCALENDAR="*-*-* $(to_calendar_time "$LORA_RECEIVE_TIME")"
 
-mkdir -p "$LOG_DIR"
+# The installer runs as root, but every LoRa process runs as pi.  Prepare the
+# directory and existing log files for that runtime user so rerunning the
+# installer also repairs files left behind by older deployments.
+install -d -o pi -g pi -m 0755 "$LOG_DIR"
+for log_name in \
+  lora_send.log \
+  lora_listen.log \
+  time_request.log \
+  lora_node_daemon.log \
+  lora_supervisor_daemon.log
+do
+  log_path="$LOG_DIR/$log_name"
+  if [[ -L "$log_path" ]]; then
+    echo "ERROR: Refusing to replace symlinked log file: $log_path" >&2
+    exit 1
+  fi
+  touch "$log_path"
+  chown pi:pi "$log_path"
+  chmod 0644 "$log_path"
+done
 
 # Allow time sync script to set system clock without sudo prompt
 SUDOERS_DATE_FILE="/etc/sudoers.d/beamnode-date"

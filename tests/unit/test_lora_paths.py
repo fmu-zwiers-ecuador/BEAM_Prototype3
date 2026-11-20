@@ -101,6 +101,10 @@ def test_lora_installer_uses_split_prototype3_directories() -> None:
     assert 'LORA_DIR="$PROJECT_ROOT/src/beamnode/transport/lora"' in text
     assert 'UNIT_DIR="$PROJECT_ROOT/deploy/systemd"' in text
     assert 'CONFIG_PATH="$PROJECT_ROOT/config/config.json"' in text
+    assert 'install -d -o pi -g pi -m 0755 "$LOG_DIR"' in text
+    assert "time_request.log" in text
+    assert 'chown pi:pi "$log_path"' in text
+    assert 'chmod 0644 "$log_path"' in text
     assert 'cp "$UNIT_DIR/lora-node-send.service" "$SYSTEMD_DIR/"' in text
     assert 'cp "$UNIT_DIR/lora-supervisor-receive.service" "$SYSTEMD_DIR/"' in text
     assert "pi ALL=(ALL) NOPASSWD: /bin/date" in text

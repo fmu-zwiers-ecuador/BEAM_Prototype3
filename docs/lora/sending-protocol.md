@@ -157,6 +157,11 @@ sudo bash deploy/setup/install_lora_automation.sh node
 sudo bash deploy/setup/install_lora_automation.sh supervisor
 ```
 
+Rerunning the installer is also the supported repair for existing Pis whose
+`/home/pi/logs` directory or LoRa log files were created by root. The installer
+preserves existing log contents while restoring ownership to `pi` and safe
+directory/file modes.
+
 The node role installs `lora-node-send.service` and a timer whose schedule is
 read from `config/config.json`. The supervisor role installs the continuously
 running `lora-supervisor-receive.service`. Both services execute from
