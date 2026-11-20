@@ -10,10 +10,11 @@ import os
 import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from beamnode.paths import REPO_ROOT, NODE_STATES_JSON
 
 EASTERN_TZ = ZoneInfo("America/New_York")
 
-JSON_FILEPATH = "/home/pi/BEAM_Prototype3/src/beamnode/supervisor/node_states.json"
+JSON_FILEPATH = str(NODE_STATES_JSON)
 LOG_FILE = "/home/pi/logs/ping.log"
 
 def log(message: str) -> None:
