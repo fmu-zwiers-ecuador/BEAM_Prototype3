@@ -14,7 +14,7 @@ import re
 import subprocess
 import sys
 import tomllib
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import pytest
 
@@ -89,7 +89,11 @@ def test_documented_command_can_import_beamnode(command: str) -> None:
 
     # Map the Pi checkout onto this checkout, then import the way root would:
     # -S ignores site-packages, so only PYTHONPATH can supply beamnode.
-    pythonpath = paths.REPO_ROOT / Path(match["pythonpath"]).relative_to(paths.PI_CHECKOUT)
+    pi_pythonpath = PurePosixPath(match["pythonpath"])
+    pi_checkout = PurePosixPath(paths.PI_CHECKOUT.as_posix())
+
+    relative_pythonpath = pi_pythonpath.relative_to(pi_checkout)
+    pythonpath = paths.REPO_ROOT / Path(*relative_pythonpath.parts)
     result = subprocess.run(
         [sys.executable, "-S", "-c", "import beamnode.paths"],
         env={**os.environ, "PYTHONPATH": str(pythonpath)},
