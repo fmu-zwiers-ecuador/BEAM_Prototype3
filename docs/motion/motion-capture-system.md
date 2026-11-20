@@ -289,7 +289,7 @@ merge worker itself.
 To make sure old standalone services are not running:
 
 ```bash
-cd /home/pi/BEAMNode_Prototype2/scripts/node/Motion
+cd /home/pi/BEAMNode_Prototype3/scripts/node/Motion
 ./disable_standalone_motion_services.sh
 sudo systemctl restart beamnode.service
 ```
@@ -297,7 +297,7 @@ sudo systemctl restart beamnode.service
 Optional standalone mode only:
 
 ```bash
-cd /home/pi/BEAMNode_Prototype2/scripts/node/Motion
+cd /home/pi/BEAMNode_Prototype3/scripts/node/Motion
 ./install_motion_merge_service.sh --standalone
 ```
 
