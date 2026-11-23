@@ -24,11 +24,6 @@ from beamnode.paths import MOVE_TO_BEAMDRIVE_SCRIPT, NODE_STATES_JSON
 
 EASTERN_TZ = ZoneInfo("America/New_York")
 
-# -----------------------------
-# Configuration File Path and Loading
-# -----------------------------
-CONFIG_FILE = str(CONFIG_JSON)
-
 # ---------------------------------------------------
 # CONFIGURATION
 # ---------------------------------------------------
@@ -351,7 +346,7 @@ def has_remote_data(full_hostname):
                 continue
             entries.append(cleaned)
 
-        if entries: 
+        if entries:
             log(f"{full_hostname}: SUCCESS checking remote shipping folder")
             return True
         else:
@@ -543,7 +538,7 @@ def get_nas_path():
         log("ERROR: NAS_PATH is not set (check your .env or environment). Cannot back up to NAS.")
         return None
     return base + NAS_REMOTE_SUBDIR
-    
+
 def move_to_nas():
     """
     Pushes data from supervisor root to Synology NAS using scp.
@@ -560,7 +555,7 @@ def move_to_nas():
 
     source_dir = os.path.join(SUPERVISOR_DATA_ROOT, ".")
     cmd = ["scp", "-r", source_dir, nas_path]
-    
+
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         if result.stdout.strip():

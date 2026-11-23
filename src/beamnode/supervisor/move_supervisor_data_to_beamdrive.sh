@@ -13,10 +13,10 @@ if mount | grep -q "$MOUNT_POINT"; then
     echo "Drive is already mounted. Proceeding to next step..."
 else
     echo "Drive is not mounted. Attempting to mount $DRIVE..."
-    
+
     # Create mount point directory if it doesn't exist
     mkdir -p "$MOUNT_POINT"
-    
+
     # Mount the drive
     if sudo -n mount "$DRIVE" "$MOUNT_POINT"; then
         echo "Mount successful. Proceeding to next step..."

@@ -1,72 +1,55 @@
-# **BEAM Student Task Documentation**
+# Supervisor retry queue
 
-### **Basic Info**
+The supervisor shipping workflow pulls node data over the BATMAN mesh, records
+transfer state, retries failed nodes, and stages successful transfers for the
+NAS. The runtime scripts are:
 
-* **Task Title:** Scheduled RetryQueue Supervisor Setup  
-* **Student(s):** Jackson Roberts  
-* **Mentor/Reviewer:** Raiz Mohammed  
-* **Date Started / Completed:** 2/5/2026 – 2/9/2026  
-* **Status:** Done  
-* **GitHub Link:** [set\_retryservice.sh](https://github.com/fmu-zwiers-ecuador/BEAMNode_Prototype2/blob/main/installation_bash/set_retryservice.sh)
+- `src/beamnode/supervisor/ping_nodes_10min.py`
+- `src/beamnode/supervisor/retryqueue.py`
+- `src/beamnode/supervisor/retrylogic.sh`
+- `src/beamnode/supervisor/move_supervisor_data_to_beamdrive.sh`
 
----
+Service and timer installation is tracked separately in issue #11. Do not add a
+second cron schedule for a workflow already managed by systemd.
 
-### **1\) Summary**
+## Runtime paths
 
-I developed a deployment script that configures a **systemd timer and service** to handle scheduled data transfers. Instead of running a script 24/7, this setup triggers the `retryqueue.py` logic once daily at 14:00 (2:00 PM), ensuring that queued messages are processed during a specific maintenance window to optimize node resources.
+| Purpose | Path |
+|---|---|
+| Node state | `config/node_states.json` |
+| Node shipping source | `/home/pi/shipping` |
+| Supervisor staging root | `/home/pi/usbmnt/data` |
+| Queue log | `/home/pi/logs/queue.log` |
+| NAS transfer helper | `src/beamnode/supervisor/move_supervisor_data_to_beamdrive.sh` |
 
-### **2\) Goals**
+The supervisor must run from an installed Prototype3 checkout so the shared
+`beamnode.paths` constants resolve to that checkout. Set the NAS host and other
+deployment-specific values in the environment; missing NAS configuration is
+reported when the NAS operation runs rather than crashing module import.
 
-* **Main goal:** Automate the creation of a persistent daily timer for the BEAMNode data queue.  
-* **Success Metric:** `systemctl list-timers` shows the next scheduled run at 13:10:00, and the service executes without manual intervention.
+## Manual operation
 
-### **3\) Setup**
+From the Prototype3 repository root:
 
-* **Hardware:** Raspberry Pi (Standard BEAMNode kit).  
-* **Software:** Linux (Systemd-enabled), Python 3\.  
-* **Directories Required:** `/home/pi/logs` and `/home/pi/data`.  
-* **Install/run steps:**
+```bash
+python3 src/beamnode/supervisor/ping_nodes_10min.py
+python3 src/beamnode/supervisor/retryqueue.py
+```
 
-Bash  
-chmod \+x set\_retryservice.sh  
-sudo ./set\_retryservice.sh
+Use only a disposable bench node for an end-to-end run. Follow
+[`bench-test.md`](bench-test.md) and retain the source checksum, destination
+checksum, and matching `queue.log` entries as evidence.
 
-### **4\) Method**
+## Recovery
 
-* **Directory Prep:** Created standard log and data directories to ensure the Python script has a place to write output.  
-* **Permission Handling:** Forced execution permissions on the target Python script.  
-* **Dual-Unit Logic:**  
-  * Created a `.service` file of `Type=oneshot` (runs then exits).  
-  * Created a `.timer` file using `OnCalendar` to specify the 14:00 schedule.  
-* **Persistence:** Set `Persistent=true` in the timer so that if the Pi is powered off during the scheduled time, the task runs immediately upon next boot.
+1. Inspect `/home/pi/logs/queue.log` for the node name and failed step.
+2. Confirm the node address and transfer state in `config/node_states.json`.
+3. Verify the supervisor can reach the node over the BATMAN mesh.
+4. Confirm `/home/pi/usbmnt` is mounted and has enough free space.
+5. Correct the failed dependency, then rerun `retryqueue.py`.
+6. Compare source and destination checksums before clearing or replacing any
+   source data.
 
-### **5\) Code**
-
-* **Main script:** `installation_bash/set_retryservice.sh`  
-* **Target script:** `scripts/node/shipping_queuing/retryqueue.py`
-
-**Important Snippet (The Timer Logic):**
-
-Bash  
-\[Timer\]  
-OnCalendar=\*-\*-\* 14:00:00  
-Persistent=true  
-Unit=retryqueue.service
-
-### **6\) Testing**
-
-* **Validation:** Used `systemctl is-active --quiet retryqueue.timer` to confirm successful activation.  
-* **Scheduling Check:** Ran `systemctl list-timers` to verify the "Next" and "Left" columns correctly pointed to 1:10 PM.  
-* **Results:** **Pass**. The system recognizes the schedule and links the timer correctly to the one-shot service.
-
-### **7\) Lessons & Next Steps**
-
-* **What worked well:** Using `oneshot` services is much more efficient for periodic tasks than `always` restart services.  
-* **Problems faced:** Timezone synchronization. If the Pi's system clock is not set to the local time, the 14:00 trigger will happen at the wrong time.  
-* **Suggestions:** Ensure NTP (Network Time Protocol) is active on the Pi so the "14:00" trigger remains accurate.
-
-### **8\) References**
-
-* [BEAMNode Prototype 1 Repo](https://www.google.com/search?q=https://github.com/fmu-zwiers-ecuador/BEAMNode_Prototype2/)  
-* [ArchWiki: Systemd Timers](https://wiki.archlinux.org/title/Systemd/Timers)
-
+Do not delete a node's shipping directory merely because `rsync` returned
+success; the known reliability work is tracked separately and requires transfer
+verification before deletion behavior changes.
