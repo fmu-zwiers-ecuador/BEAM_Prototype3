@@ -22,7 +22,8 @@ capture. It starts and monitors both the PIR trigger and the merge worker.
   `--standalone`.
 - `disable_standalone_motion_services.sh` stops old standalone motion services so
   launcher remains the only motion owner.
-- `motion_logging.py` sets up shared logging to `/home/pi/logs/motion.log`.
+- `motion_logging.py` sets up shared logging to
+  `/home/pi/BEAM_Prototype3/logs/motion.log`.
 
 ## Event Flow
 
@@ -82,7 +83,7 @@ recovery. The final combined video is `motionvid_audio_TIMESTAMP.mp4`.
 
 ## Current Capture Settings
 
-The important settings live in `scripts/node/config.json`.
+The important settings live in `config/config.json`.
 
 Current intended behavior:
 
@@ -222,7 +223,7 @@ number of H.264 frames with `ffprobe` and remuxes the video using the measured
 FPS. This prevents playback speed drift when the Pi cannot hit the configured
 FPS exactly.
 
-Watch for this line in `/home/pi/logs/motion.log`:
+Watch for this line in `/home/pi/BEAM_Prototype3/logs/motion.log`:
 
 ```text
 Measured video fps ...
@@ -289,7 +290,7 @@ merge worker itself.
 To make sure old standalone services are not running:
 
 ```bash
-cd /home/pi/BEAMNode_Prototype3/scripts/node/Motion
+cd /home/pi/BEAM_Prototype3/deploy/systemd
 ./disable_standalone_motion_services.sh
 sudo systemctl restart beamnode.service
 ```
@@ -297,7 +298,7 @@ sudo systemctl restart beamnode.service
 Optional standalone mode only:
 
 ```bash
-cd /home/pi/BEAMNode_Prototype3/scripts/node/Motion
+cd /home/pi/BEAM_Prototype3/deploy/systemd
 ./install_motion_merge_service.sh --standalone
 ```
 
@@ -338,13 +339,13 @@ helps avoid leaving a corrupted final MP4 if power is lost during processing.
 Main capture log:
 
 ```text
-/home/pi/logs/motion.log
+/home/pi/BEAM_Prototype3/logs/motion.log
 ```
 
 Video/final-MP4 processing log:
 
 ```text
-/home/pi/logs/motion_video_processing.log
+/home/pi/BEAM_Prototype3/logs/motion_video_processing.log
 ```
 
 The motion log shows capture behavior: motion detection, photos, video/audio
@@ -373,7 +374,7 @@ Decrease:
 
 ### Video is choppy
 
-Check the measured FPS in `/home/pi/logs/motion.log`.
+Check the measured FPS in `/home/pi/BEAM_Prototype3/logs/motion.log`.
 
 If measured FPS is much lower than configured FPS, lower the video workload.
 Good Pi Zero settings are usually closer to:
@@ -399,7 +400,7 @@ or:
 Check:
 
 ```text
-/home/pi/logs/motion_video_processing.log
+/home/pi/BEAM_Prototype3/logs/motion_video_processing.log
 ```
 
 Also check whether the merge job is stuck or failed in the event `combined/`

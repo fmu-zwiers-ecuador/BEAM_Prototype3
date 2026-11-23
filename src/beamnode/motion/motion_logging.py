@@ -3,13 +3,10 @@
 
 import logging
 import logging.handlers
-from pathlib import Path
-from beamnode.paths import REPO_ROOT
-from beamnode.paths import CONFIG_JSON
+from beamnode.paths import LOGS_DIR
 
 
-LOG_DIR = Path("/home/pi/BEAMNode_Prototype3/logs")
-LOG_PATH = LOG_DIR / "motion.log"
+LOG_PATH = LOGS_DIR / "motion.log"
 
 
 def setup_motion_logger(name):
@@ -30,7 +27,7 @@ def setup_motion_logger(name):
     logger.addHandler(stream_handler)
 
     try:
-        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        LOGS_DIR.mkdir(parents=True, exist_ok=True)
         file_handler = logging.handlers.RotatingFileHandler(
             LOG_PATH,
             maxBytes=1_000_000,

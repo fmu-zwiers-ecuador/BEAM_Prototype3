@@ -17,13 +17,11 @@ import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
-from beamnode.paths import REPO_ROOT
-from beamnode.paths import CONFIG_JSON
+from beamnode.paths import LOGS_DIR
 
 
-LOG_DIR = Path("/home/pi/logs")
-LOCK_PATH = LOG_DIR / "motion_merge.lock"
-VIDEO_PROCESSING_LOG_PATH = LOG_DIR / "motion_video_processing.log"
+LOCK_PATH = LOGS_DIR / "motion_merge.lock"
+VIDEO_PROCESSING_LOG_PATH = LOGS_DIR / "motion_video_processing.log"
 DEFAULT_QUEUE_DIR = Path("/home/pi/data/motion_events")
 
 
@@ -162,7 +160,7 @@ def run_merge(job_path, claim=True):
         pass
     except Exception:
         pass
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
     try:
         os.nice(10)
@@ -219,7 +217,7 @@ def find_pending_jobs(queue_dir):
 
 
 def watch_queue(queue_dir, poll_sec):
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
     append_merge_log(VIDEO_PROCESSING_LOG_PATH, f"WATCH_STARTED queue={queue_dir} pid={os.getpid()}")
 
     while True:
