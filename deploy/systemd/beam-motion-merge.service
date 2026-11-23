@@ -1,0 +1,15 @@
+[Unit]
+Description=BEAM motion final-video merge worker
+After=local-fs.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/BEAM_Prototype3/src/beamnode/motion
+ExecStart=/usr/bin/python3 /home/pi/BEAM_Prototype3/src/beamnode/motion/motion_merge_worker.py --watch --queue-dir /home/pi/data/motion_events --poll-sec 5
+Restart=always
+RestartSec=5
+Nice=10
+
+[Install]
+WantedBy=multi-user.target
