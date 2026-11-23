@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import runpy
 from types import SimpleNamespace
@@ -74,7 +75,12 @@ def test_node_shipping_moves_fixture_into_timestamped_folder(tmp_path, monkeypat
 
     monkeypatch.setattr(paths, "CONFIG_JSON", config_path)
     monkeypatch.setattr(paths, "REPO_ROOT", tmp_path)
-    monkeypatch.setattr("os.uname", lambda: SimpleNamespace(nodename="bench-node"))
+    monkeypatch.setattr(
+        os,
+        "uname",
+        lambda: SimpleNamespace(nodename="bench-node"),
+        raising=False,
+    )
 
     runpy.run_path(str(STORAGE / "shipping.py"), run_name="shipping_test")
 
