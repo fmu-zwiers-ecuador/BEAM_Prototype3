@@ -229,3 +229,7 @@ __marimo__/
 /config/config.json
 /logs/*
 !/logs/.gitkeep
+
+# BEAM node state runtime artifacts
+config/node_states.json.bak
+config/.node_states.*.tmp
