@@ -14,6 +14,9 @@ dependencies = []
 node = [
   "pyserial>=3.5",
   "smbus2>=0.4",
+  "serial", 
+  "smbus2", 
+  "pyaudio"
 ]
 supervisor = []
 dev = [
