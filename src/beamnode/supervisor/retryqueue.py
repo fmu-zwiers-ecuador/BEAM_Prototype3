@@ -13,7 +13,10 @@ import os
 import json
 import tempfile
 import shutil
-import pwd
+try:
+    import pwd
+except ImportError:  # Windows has no POSIX password database.
+    pwd = None
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -198,6 +201,10 @@ def run_cmd(cmd, label, **kwargs):
 
 def get_run_user_ids():
     """Return numeric uid/gid for the runtime user."""
+    if pwd is None:
+        uid = os.getuid() if hasattr(os, "getuid") else 0
+        gid = os.getgid() if hasattr(os, "getgid") else 0
+        return uid, gid
     try:
         user_info = pwd.getpwnam(RUN_USER)
         return user_info.pw_uid, user_info.pw_gid
